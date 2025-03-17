@@ -12,6 +12,42 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  TextEditingController weightController = TextEditingController();
+  TextEditingController heightController = TextEditingController();
+
+  String imcInfo = "Informe seus dados.";
+
+  void _resetFields() {
+    setState(() {
+      heightController.clear();
+      weightController.clear();
+      imcInfo = "Informe seus dados.";
+    });
+  }
+
+  void _calculate() {
+    double weight = double.parse(weightController.text);
+    double height = double.parse(heightController.text) / 100;
+
+    double imc = weight / (height * height);
+
+    setState(() {
+      if(imc < 18.6) {
+        imcInfo = "Abaixo do peso [${imc.toStringAsPrecision(2)}]";
+      } else if (imc > 18.6 && imc < 24.9) {
+        imcInfo = "Peso ideal [${imc.toStringAsPrecision(2)}]";
+      } else if (imc > 24.9 && imc < 29.9) {
+        imcInfo = "Levemente acima do peso [${imc.toStringAsPrecision(2)}]";
+      }else if (imc > 29.9 && imc < 34.9) {
+        imcInfo = "Obesidade grau I [${imc.toStringAsPrecision(2)}]";
+      }else if (imc > 34.9 && imc < 39.9) {
+        imcInfo = "Obesidade grau II [${imc.toStringAsPrecision(2)}]";
+      }else if (imc > 39.9) {
+        imcInfo = "Obesidade grau I [${imc.toStringAsPrecision(2)}]";
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,7 +60,7 @@ class _HomeState extends State<Home> {
         centerTitle: true,
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: _resetFields,
             icon: Icon(Icons.refresh, color: Colors.white),
           ),
         ],
@@ -43,6 +79,7 @@ class _HomeState extends State<Home> {
               ),
               textAlign: TextAlign.center,
               style: TextStyle(color: Colors.green, fontSize: 20),
+              controller: weightController,
             ),
             TextField(
               keyboardType: TextInputType.number,
@@ -52,11 +89,12 @@ class _HomeState extends State<Home> {
               ),
               textAlign: TextAlign.center,
               style: TextStyle(color: Colors.green, fontSize: 20),
+              controller: heightController,
             ),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 10),
               child: ElevatedButton(
-                onPressed: () {},
+                onPressed: _calculate,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.green,
                   shape: RoundedRectangleBorder(
@@ -66,12 +104,12 @@ class _HomeState extends State<Home> {
                 ),
                 child: Text(
                   'Calcular',
-                  style: TextStyle(color: Colors.white, fontSize: 25),
+                  style: TextStyle(color: Colors.white, fontSize: 20),
                 ),
               ),
             ),
             Text(
-              'data',
+              imcInfo,
               style: TextStyle(fontSize: 20, color: Colors.green),
               textAlign: TextAlign.center,
             ),
