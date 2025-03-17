@@ -24,6 +24,7 @@ class _HomeState extends State<Home> {
       heightController.clear();
       weightController.clear();
       imcInfo = "Informe seus dados.";
+      _formKey = GlobalKey<FormState>();
     });
   }
 
